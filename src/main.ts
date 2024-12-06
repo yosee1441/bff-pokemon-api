@@ -3,8 +3,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 import { AppModule } from './app.module';
-import { ResponseInterceptor } from './common/interceptors/response.interceptor';
-import { envs } from './config';
+import { envs, SeedService } from './common';
 
 async function bootstrap() {
   const logger = new Logger('Main pokemon service');
@@ -21,7 +20,9 @@ async function bootstrap() {
   );
 
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalInterceptors(new ResponseInterceptor());
+
+  const seedService = app.get(SeedService);
+  await seedService.runSeed();
 
   await app.listen();
 

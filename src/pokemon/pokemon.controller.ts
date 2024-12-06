@@ -1,12 +1,5 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Patch,
-  Delete,
-} from '@nestjs/common';
+import { Controller } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { PokemonService } from './pokemon.service';
 import { CreatePokemonDto, UpdatePokemonDto } from './dtos';
@@ -15,28 +8,28 @@ import { CreatePokemonDto, UpdatePokemonDto } from './dtos';
 export class PokemonController {
   constructor(private readonly pokemonService: PokemonService) {}
 
-  @Post()
-  create(@Body() createPokemonDto: CreatePokemonDto) {
-    return this.pokemonService.create(createPokemonDto);
+  @MessagePattern({ cmd: 'createPokemon' })
+  create(@Payload() dto: CreatePokemonDto) {
+    return this.pokemonService.create(dto);
   }
 
-  @Get()
+  @MessagePattern({ cmd: 'findAllPokemons' })
   findAll() {
     return this.pokemonService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @MessagePattern({ cmd: 'findOnePokemon' })
+  findOne(@Payload('id') id: string) {
     return this.pokemonService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePokemonDto: UpdatePokemonDto) {
-    return this.pokemonService.update(id, updatePokemonDto);
+  @MessagePattern({ cmd: 'updatePokemon' })
+  update(@Payload('id') id: string, @Payload() dto: UpdatePokemonDto) {
+    return this.pokemonService.update(id, dto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @MessagePattern({ cmd: 'removePokemon' })
+  remove(@Payload('id') id: string) {
     return this.pokemonService.remove(id);
   }
 }

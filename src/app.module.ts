@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { envs } from './config';
+import { envs, SeedModule } from './common';
 import { PokemonModule } from './pokemon/pokemon.module';
 
 @Module({
@@ -10,6 +10,7 @@ import { PokemonModule } from './pokemon/pokemon.module';
       dbName: envs.mongoInitDbDatabase,
     }),
     PokemonModule,
+    SeedModule,
   ],
 })
 export class AppModule {}
